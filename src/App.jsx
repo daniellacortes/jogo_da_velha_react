@@ -16,11 +16,6 @@ function Board({ xIsNext, squares, onPlay }) {
   let divArray = new Array(3).fill(null);
   let squaresArray = new Array(3).fill(null);
 
-  let squaresTry = squares.map((item, id) => (
-    <Square key={id}  value={item} onSquareClick={() => handleClick(id)}/>
-));
-
-
   let divMap = divArray.map((item, id) => (
     <div key={id} className="board-row"> 
     {squaresArray.map((item, id2) => (
@@ -35,7 +30,7 @@ function Board({ xIsNext, squares, onPlay }) {
   }
 
   function handleClick(i) {
-    setCurrentMoveOrder(moveOrder);
+    // setCurrentMoveOrder(moveOrder);
     if (squares[i] || calculateWinner(squares)) {
       return;
     }
@@ -106,6 +101,7 @@ export default function Game() {
   const xIsNext = currentMove % 2 === 0;  
   const currentSquares = history[currentMove];
   let descriptionCurrentMove = 'Current move: #' + (currentMove+1);
+  const [currentOrder, setCurrentOrder] = useState(0);
   
  
 
@@ -119,43 +115,105 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
-  const moves = history.map((squares, move) => {
-    let description;
+  // function MovesHistory (){
+    
+  // let moves = history.map((squares, move) => {
+  //   let description;
 
-    if (move > 0) {
-      description = 'Go to move #' + move;
-    } else {
-      description = 'Go to game start';
-    }
-    return (
-      <li key={move}>
-        <button onClick={() => jumpTo(move)}>{description}</button>
-      </li>
-    );
-  });
+  //   if (move > 0) {
+  //     description = 'Go to move #' + move;
+  //   } else {
+  //     description = 'Go to game start';
+  //   }
 
-  const [currentMoveOrder, setCurrentMoveOrder] = useState(moves);
+  // //   let moveOrder = <li key={move}>
+  // //   <button onClick={() => jumpTo(move)}>{description}</button>
+  // // </li>;
 
-    let moveOrder = moves.map((item, id) => 
-      <li key={id}>{item.props.children}</li>)
-    setCurrentMoveOrder({moveOrder});
+  //   return <li key={move}>
+  //     <button onClick={() => jumpTo(move)}>{description}</button>
+  //   </li>;   
+  //   // <Order key={move} moveOrder={moveOrder}/>
+  // });
 
-  // setCurrentMoveOrder(moveOrder);
+  // let movesArray = [""];
+  // movesArray.push({moves});
 
-  function Order (){
-    // let moveOrderOrder = currentMoveOrder.reverse().map((item, id) => 
-    //   <li key={id}>{item}</li> );
-    // setCurrentMoveOrder(moveOrderOrder);
+  // console.log(movesArray);
 
+  // return movesArray;
 
-    console.log ("Tá revertendo?", moveOrderOrder);
+  // }
 
-    // moveOrder = moveOrderOrder;
-    // return moveOrder;
+      // let moveOrder = moves.map((item, id) => 
+    //   <li key={id}>{item.props.children}</li>)
 
-   };
+    // console.log("MoveORder", moveOrder);
 
-  console.log (moves);
+    function History (){
+      const reversedMove = [...history].reverse();
+      setHistory(reversedMove);
+      
+
+      let movesReversed = reversedMove.map((squares, move) => {
+        let description;
+    
+        if (move < reversedMove.length) {
+          description = 'Go to move #' + (reversedMove.length-1);
+        } else {
+          description = 'Go to game start';
+        }
+    
+        return <li key={move}>
+          <button onClick={() => jumpTo(move)}>{description}</button>
+        </li>;});
+
+let moves = history.map((squares, move) => {
+  let description;
+
+  if (move > 0) {
+    description = 'Go to move #' + move;
+  } else {
+    description = 'Go to game start';
+  }
+
+//   let moveOrder = <li key={move}>
+//   <button onClick={() => jumpTo(move)}>{description}</button>
+// </li>;
+
+  return <li key={move}>
+    <button onClick={() => jumpTo(move)}>{description}</button>
+  </li>;}); 
+
+    
+  
+      console.log ("Tá revertendo?", movesReversed);
+
+      if (currentOrder>0){
+        return movesReversed;
+      } else {
+        return moves;
+      }
+           
+     };
+
+     function Order (){
+      setCurrentOrder(1);
+     }
+
+    
+
+  //  function History (){
+
+  //   if(currentOrder>0){
+  //     return <Order/>
+  //   } else {
+  //     return {moves}
+  //   }
+
+  //  }
+
+  // console.log ("Moves", moves);
 
   return (
     <div className="game">
@@ -163,9 +221,8 @@ export default function Game() {
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-      <ol>{currentMoveOrder}</ol>
-      <button onClick={Order}>Ordenar</button>
-      
+      <ol></ol>
+      <button onClick={Order}>Ordenar</button>      
       <p>{descriptionCurrentMove}
       </p>
       </div>
