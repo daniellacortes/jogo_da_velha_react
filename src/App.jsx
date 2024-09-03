@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 function Square ({ value, onSquareClick}){
 
@@ -99,10 +99,10 @@ export default function Game() {
   const xIsNext = currentMove % 2 === 0;  
   const currentSquares = history[currentMove];
   let descriptionCurrentMove = 'Current move: #' + (currentMove+1);
-  const [movesOrder, setMovesOrder] = useState (null);
+  const [movesOrder, setMovesOrder] = useState([]);
 
   const reversedMove = () => history.reverse();
-  const handlerOnClick = () => {setMovesOrder(reversedMove)};
+  // const handlerOnClick = () => {setMovesOrder(reversedMove)};
   
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
@@ -115,20 +115,38 @@ export default function Game() {
     setCurrentMove(nextMove);
   }
 
-  //  let moves = history.map((squares, move) => {
-  //   let description;
-  
-  //   if (move > 0) {
-  //     description = 'Go to move #' + move;
-  //   } else {
-  //     description = 'Go to game start';
-  //   }
-
-  //   return <li key={move}>
-  //     <button onClick={() => jumpTo(move)}>{description}</button>
-  //   </li>;});
+    let moves = history.map((squares, move) => {
+      let description;
     
-    // setMovesOrder (moves);
+      if (move > 0) {
+        description = 'Go to move #' + move;
+      } else {
+        description = 'Go to game start';
+      }
+  
+      return <li key={move}>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>;});
+
+    let movesArray = moves;
+    // setMovesOrder (movesArray);
+
+
+    function Order (){
+
+      setHistory(history.reverse());
+
+
+      console.log ("Tá entrando aqui", history);
+
+      // return movesArray.reverse();
+     }
+    // console.log("array = ", movesArray);
+    // movesArray.reverse();
+    // console.log("array ordenada = ", movesArray);
+
+
+    // setMovesOrder ("OI");
 
   return (
     <div className="game">
@@ -136,8 +154,19 @@ export default function Game() {
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-      <ol>{movesOrder}</ol>
-      <button onClick={handlerOnClick} >Ordenar</button>      
+      <ol>{history.map((squares, move) => {
+      let description;
+    
+      if (move > 0) {
+        description = 'Go to move #' + move;
+      } else {
+        description = 'Go to game start';
+      }
+  
+      return <li key={move}>
+        <button onClick={() => jumpTo(move)}>{description}</button>
+      </li>;})}</ol>
+      <button onClick={Order} >Ordenar</button>      
       <p>{descriptionCurrentMove}
       </p>
       </div>
