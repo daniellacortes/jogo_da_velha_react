@@ -93,127 +93,42 @@ function calculateWinner(squares) {
   return null;
 }
 
-
-
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;  
   const currentSquares = history[currentMove];
   let descriptionCurrentMove = 'Current move: #' + (currentMove+1);
-  const [currentOrder, setCurrentOrder] = useState(0);
-  
- 
+  const [movesOrder, setMovesOrder] = useState (null);
 
+  const reversedMove = () => history.reverse();
+  const handlerOnClick = () => {setMovesOrder(reversedMove)};
+  
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
+    console.log(history);
   }
 
   function jumpTo(nextMove) {
     setCurrentMove(nextMove);
   }
 
-  // function MovesHistory (){
-    
-  // let moves = history.map((squares, move) => {
+  //  let moves = history.map((squares, move) => {
   //   let description;
-
+  
   //   if (move > 0) {
   //     description = 'Go to move #' + move;
   //   } else {
   //     description = 'Go to game start';
   //   }
 
-  // //   let moveOrder = <li key={move}>
-  // //   <button onClick={() => jumpTo(move)}>{description}</button>
-  // // </li>;
-
   //   return <li key={move}>
   //     <button onClick={() => jumpTo(move)}>{description}</button>
-  //   </li>;   
-  //   // <Order key={move} moveOrder={moveOrder}/>
-  // });
-
-  // let movesArray = [""];
-  // movesArray.push({moves});
-
-  // console.log(movesArray);
-
-  // return movesArray;
-
-  // }
-
-      // let moveOrder = moves.map((item, id) => 
-    //   <li key={id}>{item.props.children}</li>)
-
-    // console.log("MoveORder", moveOrder);
-
-    function History (){
-      const reversedMove = [...history].reverse();
-      setHistory(reversedMove);
-      
-
-      let movesReversed = reversedMove.map((squares, move) => {
-        let description;
+  //   </li>;});
     
-        if (move < reversedMove.length) {
-          description = 'Go to move #' + (reversedMove.length-1);
-        } else {
-          description = 'Go to game start';
-        }
-    
-        return <li key={move}>
-          <button onClick={() => jumpTo(move)}>{description}</button>
-        </li>;});
-
-let moves = history.map((squares, move) => {
-  let description;
-
-  if (move > 0) {
-    description = 'Go to move #' + move;
-  } else {
-    description = 'Go to game start';
-  }
-
-//   let moveOrder = <li key={move}>
-//   <button onClick={() => jumpTo(move)}>{description}</button>
-// </li>;
-
-  return <li key={move}>
-    <button onClick={() => jumpTo(move)}>{description}</button>
-  </li>;}); 
-
-    
-  
-      console.log ("Tá revertendo?", movesReversed);
-
-      if (currentOrder>0){
-        return movesReversed;
-      } else {
-        return moves;
-      }
-           
-     };
-
-     function Order (){
-      setCurrentOrder(1);
-     }
-
-    
-
-  //  function History (){
-
-  //   if(currentOrder>0){
-  //     return <Order/>
-  //   } else {
-  //     return {moves}
-  //   }
-
-  //  }
-
-  // console.log ("Moves", moves);
+    // setMovesOrder (moves);
 
   return (
     <div className="game">
@@ -221,8 +136,8 @@ let moves = history.map((squares, move) => {
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-      <ol></ol>
-      <button onClick={Order}>Ordenar</button>      
+      <ol>{movesOrder}</ol>
+      <button onClick={handlerOnClick} >Ordenar</button>      
       <p>{descriptionCurrentMove}
       </p>
       </div>
