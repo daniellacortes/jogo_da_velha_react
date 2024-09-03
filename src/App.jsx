@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
+
+import {ListHistory} from './components/ListHistory'
 
 function Square ({ value, onSquareClick}){
 
@@ -96,39 +98,29 @@ function calculateWinner(squares) {
 export default function Game() {
   const [history, setHistory] = useState([Array(9).fill(null)]);
   const [currentMove, setCurrentMove] = useState(0);
-  const xIsNext = currentMove % 2 === 0;  
+  const [movesOrder, setMovesOrder] = useState(null);
+  const [updateScreen, setUpdateScreen] = useState(false)
+  
   const currentSquares = history[currentMove];
   let descriptionCurrentMove = 'Current move: #' + (currentMove+1);
-  const [movesOrder, setMovesOrder] = useState (null);
+  const xIsNext = currentMove % 2 === 0;  
 
-  const reversedMove = () => history.reverse();
-  const handlerOnClick = () => {setMovesOrder(reversedMove)};
+  const handlerOnClick = () => {
+    setMovesOrder([...movesOrder.reverse()])
+  };
   
   function handlePlay(nextSquares) {
     const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
     setHistory(nextHistory);
+    setMovesOrder(nextHistory)
     setCurrentMove(nextHistory.length - 1);
-    console.log(history);
   }
 
   function jumpTo(nextMove) {
     setCurrentMove(nextMove);
   }
 
-  //  let moves = history.map((squares, move) => {
-  //   let description;
-  
-  //   if (move > 0) {
-  //     description = 'Go to move #' + move;
-  //   } else {
-  //     description = 'Go to game start';
-  //   }
 
-  //   return <li key={move}>
-  //     <button onClick={() => jumpTo(move)}>{description}</button>
-  //   </li>;});
-    
-    // setMovesOrder (moves);
 
   return (
     <div className="game">
@@ -136,8 +128,10 @@ export default function Game() {
       <Board xIsNext={xIsNext} squares={currentSquares} onPlay={handlePlay} />
       </div>
       <div className="game-info">
-      <ol>{movesOrder}</ol>
-      <button onClick={handlerOnClick} >Ordenar</button>      
+
+        {/* Primeiro eu isolei esse component ... esse arquivo esta muito grande  */}
+      <ListHistory listArr={movesOrder || []} />
+       
       <p>{descriptionCurrentMove}
       </p>
       </div>
