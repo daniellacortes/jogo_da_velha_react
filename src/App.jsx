@@ -109,20 +109,24 @@ function calculateWinner(squares) {
 }
 
 export default function Game() {
-  const [history, setHistory] = useState([Array(9).fill(null)]);
+  const [history, setHistory] = useState([{square: Array(9).fill(null), id:null}]);
   const [currentMove, setCurrentMove] = useState(0);
   const xIsNext = currentMove % 2 === 0;
-  const currentSquares = history[currentMove];
+  const currentSquares = history[currentMove].square;
   let descriptionCurrentMove = 'Current move: #' + (currentMove + 1);
   const [movesOrder, setMovesOrder] = useState(false);
-  const [id, setId] = useState(0);
 
   function handlePlay(nextSquares, i) {
-    const nextHistory = [...history.slice(0, currentMove + 1), nextSquares];
+    const nextHistory = [...history.slice(0, currentMove + 1), {square: nextSquares, id: i}];
+    console.log("NextHistory", nextHistory);
+
+
+    // let historyAndId = (
+    //   id: i,
+    //   nextHistory: nextHistory);
     setHistory(nextHistory);
     setCurrentMove(nextHistory.length - 1);
     console.log("next", nextSquares);
-    setId(i);
   }
 
   function jumpTo(nextMove) {
@@ -130,14 +134,15 @@ export default function Game() {
   }
 
   let moves = history.map((squares, move) => {
-    let description;
     let start = false;
     let desc = "";
     let player = "X";
-    let squareId = id;
+    let squareId = squares.id;
+    console.log(squareId);
+    let col = (squareId%3)+1; 
+    let row = (Math.floor(squareId/3))+1;
 
     if (move > 0) {
-      description =  squareId;
       start = true;
 
       if(move%2===0){
@@ -147,7 +152,7 @@ export default function Game() {
       }
     } 
 
-    start? desc=player + " = " + squareId : desc = 'Go to game start';
+    start? desc=player + " = Col " + col + " Row = " + row : desc = 'Go to game start';
 
     return <li key={move}>
       <button onClick={() => jumpTo(move)}>{desc}</button>
